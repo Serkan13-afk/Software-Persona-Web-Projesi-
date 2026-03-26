@@ -1,27 +1,53 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Home from './screens/Home';
-import AuthPage from './screens/AuthPage';
+import ProfileWizard from './screens/ProfileWizard';
+import AppointmentDashboard from './screens/AppointmentDashboard';
 
 function App() {
-  const [page, setPage]         = useState('home');   // 'home' | 'auth'
-  const [initialTab, setInitialTab] = useState('login'); // 'login' | 'register'
+  // 'home' | 'wizard' | 'dashboard'
+  const [page, setPage]       = useState('home');
+  const [profile, setProfile] = useState(null);
+  const [showWizard, setShowWizard] = useState(false);
 
-  const goToAuth = (tab) => {
-    setInitialTab(tab);
-    setPage('auth');
+  // On mount: check localStorage for saved profile
+  useEffect(() => {
+    const saved = localStorage.getItem('userProfile');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setProfile(parsed);
+        setPage('dashboard');
+      } catch {
+        localStorage.removeItem('userProfile');
+      }
+    }
+  }, []);
+
+  const handleWizardComplete = (newProfile) => {
+    setProfile(newProfile);
+    setShowWizard(false);
+    setPage('dashboard');
   };
 
-  if (page === 'auth') {
-    return <AuthPage initialTab={initialTab} onBack={() => setPage('home')} />;
+  const handleLogout = () => {
+    localStorage.removeItem('userProfile');
+    setProfile(null);
+    setPage('home');
+    setShowWizard(false);
+  };
+
+  if (page === 'dashboard' && profile) {
+    return <AppointmentDashboard profile={profile} onLogout={handleLogout} />;
   }
 
   return (
-    <Home
-      onNavigateToLogin={() => goToAuth('login')}
-      onNavigateToRegister={() => goToAuth('register')}
-    />
+    <>
+      <Home onCreateProfile={() => setShowWizard(true)} />
+      {showWizard && (
+        <ProfileWizard onComplete={handleWizardComplete} />
+      )}
+    </>
   );
 }
 
 export default App;
-
