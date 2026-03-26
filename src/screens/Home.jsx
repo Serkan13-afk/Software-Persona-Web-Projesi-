@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Home.css';
 
-export default function Home() {
+export default function Home({ onNavigateToLogin, onNavigateToRegister }) {
   const [scrolled, setScrolled] = useState(false);
 
   // Senkronize scroll (navbar arka planı)
@@ -28,8 +28,8 @@ export default function Home() {
             <a href="#pricing">Fiyatlandırma</a>
           </div>
           <div className="nav-auth">
-            <button className="btn-ghost">Giriş Yap</button>
-            <button className="btn-primary">Kayıt Ol</button>
+            <button className="btn-ghost" onClick={onNavigateToLogin}>Giriş Yap</button>
+            <button className="btn-primary" onClick={onNavigateToRegister}>Kayıt Ol</button>
           </div>
         </div>
       </nav>
@@ -49,8 +49,8 @@ export default function Home() {
               İşletmeniz için tasarlanmış modern, hızlı ve kusursuz deneyim sunan randevu platformu. Müşterilerinizi bekletmeyin, işinize odaklanın.
             </p>
             <div className="hero-actions animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              <button className="btn-primary btn-large">Hemen Ücretsiz Başla</button>
-              <button className="btn-secondary btn-large">Demo İncele</button>
+              <button className="btn-primary btn-large" onClick={onNavigateToRegister}>Hemen Ücretsiz Başla</button>
+              <button className="btn-secondary btn-large" onClick={onNavigateToLogin}>Demo İncele</button>
             </div>
           </div>
           
