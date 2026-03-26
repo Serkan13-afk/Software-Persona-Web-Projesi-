@@ -162,6 +162,7 @@ function LoginForm({ onSwitch }) {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (!auth) { setErrors({ firebase: 'Giriş servisi şu an kullanılamıyor.' }); return; }
     setErrors({});
     setLoading(true);
     try {
@@ -313,6 +314,7 @@ function RegisterForm({ onSwitch }) {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (!auth) { setErrors({ firebase: 'Kayıt servisi şu an kullanılamıyor.' }); return; }
     setErrors({});
     setLoading(true);
     try {

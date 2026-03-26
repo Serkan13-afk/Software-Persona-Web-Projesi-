@@ -10,5 +10,18 @@ const firebaseConfig = {
   appId:             import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app  = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// Guard: prevent crash if env vars are missing (e.g. Netlify without env vars set)
+const isMissingConfig = !firebaseConfig.apiKey || !firebaseConfig.projectId;
+
+let app;
+let auth;
+
+if (isMissingConfig) {
+  console.warn('[Firebase] Environment variables not found. Auth features disabled.');
+  auth = null;
+} else {
+  app  = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+}
+
+export { auth };
